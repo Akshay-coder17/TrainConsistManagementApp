@@ -18,7 +18,6 @@ public class TrainConsistManagementApp {
         for (Map.Entry<String, Integer> entry : capacityMap.entrySet()) {
             System.out.println(entry.getKey() + " -> Capacity: " + entry.getValue());
         }
-
         System.out.println("Capacity of Sleeper: " + capacityMap.get("Sleeper"));
     }
 }
