@@ -13,7 +13,6 @@ public class TrainConsistManagementApp {
         formation.add("Sleeper");
         formation.add("Cargo");
         formation.add("Guard");
-
         formation.add("Sleeper");
 
         System.out.println("Final train formation:");
