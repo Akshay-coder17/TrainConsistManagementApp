@@ -1,44 +1,29 @@
 public class TrainConsistManagementApp {
 
-    static class CargoSafetyException extends RuntimeException {
-        public CargoSafetyException(String message) {
-            super(message);
-        }
-    }
-
-    static class GoodsBogie {
-        private String shape;
-        private String cargo;
-
-        public GoodsBogie(String shape) {
-            this.shape = shape;
-        }
-
-        public void assignCargo(String cargo) {
-            try {
-                if (shape.equalsIgnoreCase("Rectangular") && cargo.equalsIgnoreCase("Petroleum")) {
-                    throw new CargoSafetyException("Unsafe cargo assignment");
-                }
-
-                this.cargo = cargo;
-                System.out.println("Cargo assigned: " + cargo);
-
-            } catch (CargoSafetyException e) {
-                System.out.println("Error: " + e.getMessage());
-            } finally {
-                System.out.println("Assignment attempt completed");
-            }
-        }
-    }
-
     public static void main(String[] args) {
 
-        System.out.println("=== UC15: Cargo Safety Exception Handling ===");
+        System.out.println("=== UC16: Sort Bogie Capacities using Bubble Sort ===");
 
-        GoodsBogie bogie1 = new GoodsBogie("Rectangular");
-        GoodsBogie bogie2 = new GoodsBogie("Cylindrical");
+        int[] capacities = {72, 56, 24, 70, 60};
 
-        bogie1.assignCargo("Petroleum");
-        bogie2.assignCargo("Petroleum");
+        System.out.println("Original capacities:");
+        for (int c : capacities) {
+            System.out.print(c + " ");
+        }
+
+        for (int i = 0; i < capacities.length - 1; i++) {
+            for (int j = 0; j < capacities.length - i - 1; j++) {
+                if (capacities[j] > capacities[j + 1]) {
+                    int temp = capacities[j];
+                    capacities[j] = capacities[j + 1];
+                    capacities[j + 1] = temp;
+                }
+            }
+        }
+
+        System.out.println("\nSorted capacities:");
+        for (int c : capacities) {
+            System.out.print(c + " ");
+        }
     }
 }
