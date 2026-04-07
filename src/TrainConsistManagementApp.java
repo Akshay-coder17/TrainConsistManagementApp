@@ -1,41 +1,46 @@
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TrainConsistManagementApp {
 
-    public static void main(String[] args) {
+    public static void searchBogie(List<String> bogies, String searchId) {
 
-        System.out.println("=== UC19: Binary Search for Bogie ID ===");
+        if (bogies.isEmpty()) {
+            throw new IllegalStateException("Cannot perform search: Train has no bogies");
+        }
 
-        String[] bogieIds = {"BG101", "BG205", "BG309", "BG412", "BG550"};
-
-        String searchId = "BG309";
-
-        System.out.println("Sorted bogie IDs:");
-        System.out.println(Arrays.toString(bogieIds));
-
-        int low = 0;
-        int high = bogieIds.length - 1;
         boolean found = false;
 
-        while (low <= high) {
-
-            int mid = (low + high) / 2;
-
-            int comparison = searchId.compareTo(bogieIds[mid]);
-
-            if (comparison == 0) {
+        for (String id : bogies) {
+            if (id.equals(searchId)) {
                 found = true;
-                System.out.println("Bogie ID found at index: " + mid);
                 break;
-            } else if (comparison > 0) {
-                low = mid + 1;
-            } else {
-                high = mid - 1;
             }
         }
 
-        if (!found) {
+        if (found) {
+            System.out.println("Bogie ID found: " + searchId);
+        } else {
             System.out.println("Bogie ID not found: " + searchId);
         }
+    }
+
+    public static void main(String[] args) {
+
+        System.out.println("=== UC20: Exception Handling During Search Operations ===");
+
+        List<String> bogies = new ArrayList<>();
+
+        try {
+            searchBogie(bogies, "BG101");
+        } catch (IllegalStateException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+
+        bogies.add("BG101");
+        bogies.add("BG205");
+        bogies.add("BG309");
+
+        searchBogie(bogies, "BG205");
     }
 }
