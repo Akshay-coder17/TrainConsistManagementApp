@@ -1,58 +1,59 @@
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class TrainConsistManagementApp {
 
-    static class Bogie {
-        private String name;
-        private int capacity;
+    private static final Pattern TRAIN_ID_PATTERN = Pattern.compile("^TRN-\\d{4}$");
+    private static final Pattern CARGO_CODE_PATTERN = Pattern.compile("^PET-[A-Z]{2}$");
 
-        public Bogie(String name, int capacity) {
-            this.name = name;
-            this.capacity = capacity;
-        }
+    public static boolean validateTrainId(String trainId) {
+        if (trainId == null) return false;
+        Matcher matcher = TRAIN_ID_PATTERN.matcher(trainId);
+        return matcher.matches();
+    }
 
-        public String getName() {
-            return name;
-        }
-
-        public int getCapacity() {
-            return capacity;
-        }
-
-        public String toString() {
-            return "Bogie[name=" + name + ", capacity=" + capacity + "]";
-        }
+    public static boolean validateCargoCode(String cargoCode) {
+        if (cargoCode == null) return false;
+        Matcher matcher = CARGO_CODE_PATTERN.matcher(cargoCode);
+        return matcher.matches();
     }
 
     public static void main(String[] args) {
 
-        System.out.println("=== UC10: Calculate Total Seating Capacity ===");
+        System.out.println("=== UC11: Validate Train and Cargo Codes ===");
 
-        List<Bogie> bogies = new ArrayList<>();
+        List<String> trainIds = Arrays.asList(
+                "TRN-1234",
+                "TRAIN12",
+                "TRN12A",
+                "1234-TRN",
+                "TRN-123",
+                "TRN-12345",
+                ""
+        );
 
-        bogies.add(new Bogie("Sleeper", 72));
-        bogies.add(new Bogie("AC Chair", 56));
-        bogies.add(new Bogie("First Class", 24));
-        bogies.add(new Bogie("Second Class", 90));
+        System.out.println("Train ID validation:");
 
-        System.out.println("Original bogie list:");
-        bogies.forEach(System.out::println);
+        for (String id : trainIds) {
+            System.out.println(id + " -> " + validateTrainId(id));
+        }
 
-        int totalSeats = bogies.stream()
-                .map(Bogie::getCapacity)
-                .reduce(0, Integer::sum);
+        List<String> cargoCodes = Arrays.asList(
+                "PET-AB",
+                "PET-ab",
+                "PET123",
+                "AB-PET",
+                "PET-A",
+                "PET-ABC",
+                ""
+        );
 
-        System.out.println("Total seating capacity: " + totalSeats);
+        System.out.println("Cargo code validation:");
 
-        List<Bogie> emptyBogies = new ArrayList<>();
-
-        int emptyTotal = emptyBogies.stream()
-                .map(Bogie::getCapacity)
-                .reduce(0, Integer::sum);
-
-        System.out.println("Empty list capacity: " + emptyTotal);
-
-        System.out.println("Original list size: " + bogies.size());
+        for (String code : cargoCodes) {
+            System.out.println(code + " -> " + validateCargoCode(code));
+        }
     }
 }
