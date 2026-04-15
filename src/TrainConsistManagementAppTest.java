@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.Test;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.stream.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TrainConsistManagementAppTest {
@@ -10,92 +10,77 @@ public class TrainConsistManagementAppTest {
         bogies.add(new TrainConsistManagementApp.Bogie("Sleeper", 72));
         bogies.add(new TrainConsistManagementApp.Bogie("AC Chair", 56));
         bogies.add(new TrainConsistManagementApp.Bogie("First Class", 24));
-        bogies.add(new TrainConsistManagementApp.Bogie("General", 90));
+        bogies.add(new TrainConsistManagementApp.Bogie("Sleeper", 70));
         return bogies;
     }
 
     @Test
-    public void testFilter_CapacityGreaterThanThreshold() {
-        List<TrainConsistManagementApp.Bogie> result =
-                getBogies().stream()
-                        .filter(b -> b.getCapacity() > 60)
-                        .collect(Collectors.toList());
+    public void testReduce_TotalSeatCalculation() {
+        int total = getBogies().stream()
+                .map(TrainConsistManagementApp.Bogie::getCapacity)
+                .reduce(0, Integer::sum);
 
-        assertEquals(2, result.size());
+        assertEquals(222, total);
     }
 
     @Test
-    public void testFilter_CapacityEqualToThreshold() {
+    public void testReduce_MultipleBogiesAggregation() {
+        int total = getBogies().stream()
+                .map(TrainConsistManagementApp.Bogie::getCapacity)
+                .reduce(0, Integer::sum);
+
+        assertTrue(total > 0);
+    }
+
+    @Test
+    public void testReduce_SingleBogieCapacity() {
         List<TrainConsistManagementApp.Bogie> bogies = new ArrayList<>();
-        bogies.add(new TrainConsistManagementApp.Bogie("Test", 60));
+        bogies.add(new TrainConsistManagementApp.Bogie("Sleeper", 72));
 
-        List<TrainConsistManagementApp.Bogie> result =
-                bogies.stream()
-                        .filter(b -> b.getCapacity() > 60)
-                        .collect(Collectors.toList());
+        int total = bogies.stream()
+                .map(TrainConsistManagementApp.Bogie::getCapacity)
+                .reduce(0, Integer::sum);
 
-        assertTrue(result.isEmpty());
+        assertEquals(72, total);
     }
 
     @Test
-    public void testFilter_CapacityLessThanThreshold() {
-        List<TrainConsistManagementApp.Bogie> result =
-                getBogies().stream()
-                        .filter(b -> b.getCapacity() > 80)
-                        .collect(Collectors.toList());
-
-        assertEquals(1, result.size());
-    }
-
-    @Test
-    public void testFilter_MultipleBogiesMatching() {
-        List<TrainConsistManagementApp.Bogie> result =
-                getBogies().stream()
-                        .filter(b -> b.getCapacity() > 50)
-                        .collect(Collectors.toList());
-
-        assertEquals(3, result.size());
-    }
-
-    @Test
-    public void testFilter_NoBogiesMatching() {
-        List<TrainConsistManagementApp.Bogie> result =
-                getBogies().stream()
-                        .filter(b -> b.getCapacity() > 100)
-                        .collect(Collectors.toList());
-
-        assertTrue(result.isEmpty());
-    }
-
-    @Test
-    public void testFilter_AllBogiesMatching() {
-        List<TrainConsistManagementApp.Bogie> result =
-                getBogies().stream()
-                        .filter(b -> b.getCapacity() > 10)
-                        .collect(Collectors.toList());
-
-        assertEquals(4, result.size());
-    }
-
-    @Test
-    public void testFilter_EmptyBogieList() {
+    public void testReduce_EmptyBogieList() {
         List<TrainConsistManagementApp.Bogie> bogies = new ArrayList<>();
 
-        List<TrainConsistManagementApp.Bogie> result =
-                bogies.stream()
-                        .filter(b -> b.getCapacity() > 60)
-                        .collect(Collectors.toList());
+        int total = bogies.stream()
+                .map(TrainConsistManagementApp.Bogie::getCapacity)
+                .reduce(0, Integer::sum);
 
-        assertTrue(result.isEmpty());
+        assertEquals(0, total);
     }
 
     @Test
-    public void testFilter_OriginalListUnchanged() {
+    public void testReduce_CorrectCapacityExtraction() {
+        List<Integer> capacities = getBogies().stream()
+                .map(TrainConsistManagementApp.Bogie::getCapacity)
+                .collect(Collectors.toList());
+
+        assertTrue(capacities.contains(72));
+        assertTrue(capacities.contains(56));
+    }
+
+    @Test
+    public void testReduce_AllBogiesIncluded() {
+        int total = getBogies().stream()
+                .map(TrainConsistManagementApp.Bogie::getCapacity)
+                .reduce(0, Integer::sum);
+
+        assertEquals(222, total);
+    }
+
+    @Test
+    public void testReduce_OriginalListUnchanged() {
         List<TrainConsistManagementApp.Bogie> original = getBogies();
 
         original.stream()
-                .filter(b -> b.getCapacity() > 60)
-                .collect(Collectors.toList());
+                .map(TrainConsistManagementApp.Bogie::getCapacity)
+                .reduce(0, Integer::sum);
 
         assertEquals(4, original.size());
     }
